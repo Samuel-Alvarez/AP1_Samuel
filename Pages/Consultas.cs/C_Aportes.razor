@@ -1,0 +1,78 @@
+@page "/Aportes"
+
+    @inject Contexto _contexto;
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Consultas de Aportes</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <select class="form-control col-2" @bind="Filtro">
+                        <option value="1">AporteId</option>
+                        <option value="2">Persona</option>
+                        
+                    </select>
+
+                    <div class="flex-fill mx-2">
+                        <label>Descripcion</label>
+                        <input type="text" class="form-control" @bind="Descripcion" />
+                    </div>
+
+                    <button type="button" class="btn btn-warning" @onclick="Buscar">
+                        <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <table class="table table-secondary">
+            <thead class="thead-dark">
+                <tr class="table-info">
+                    <th>AporteId</th>
+                    <th>Persona</th>
+                    <th>Monto</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.AporteId</td>
+                        <td>@item.Persona</td>
+                        <td>@item.Monto</td>
+       
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+
+
+@code {
+    public string Filtro { get; set; }
+    public string Descripcion { get; set; }
+    public List<Aportes> lista { get; set; } = new List<Aportes>();
+
+    private AportesBLL aportesBLL;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+         aportesBLL = new AportesBLL(_contexto);
+    }
+
+    private void Buscar()
+    {
+        lista = new List<Aportes>();
+
+         lista = aportesBLL.GetAportes();
+
+    }
+}
